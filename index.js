@@ -84,7 +84,7 @@ console.log(inputValues);
 
       //-------------------------------------------------------------------------------------------------------------------------------------------------
       //Web application ripping
-      //Initial params: Playwright's Page object, URL of the current page, index of current page, parent's index
+      //Initial params: Playwright's Page object, URL of the current page, index of current page, parent's index 
       await recursiveExploration(page, baseUrl, 0, -1); 
   
       printTree(); //Log in the console
@@ -105,6 +105,20 @@ console.log(inputValues);
     console.log("Execution finished. Check the report under the results folder")
     return;  
   })();
+
+async function validateLogin(page,link){
+  
+  if(link.includes('signin')){
+    await page.goto(link);
+    await page.waitForSelector('#identification'); 
+    await page.type('#identification', "davids_8899@hotmail.com"); 
+    await page.waitForSelector('#password'); 
+    await page.type('#password', "39443950dE*"); 
+
+    await page.waitForSelector('#ember5');
+    await page.click('#ember5');
+  }
+}
 
 //Get all anchors <a>
 async function scrapLinks(page){
@@ -131,6 +145,9 @@ async function recursiveExploration(page, link, depth, parentState){
     console.log("Depth levels reached. Exploration stopped")
     return;
   } 
+
+  await validateLogin(page, link);
+  
   console.log("Exploring");
   await page.goto(link, {waitUntil: 'networkidle'}).catch((err)=>{
     console.log(err); 
